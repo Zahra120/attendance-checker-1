@@ -8,24 +8,28 @@ const rl = readline.createInterface({
 
 var students = [
   'Jessica', 'Marie', 'William', 'Zahra', 'Marco', 'Mike', 'Kevin', 'Isis', 'Ela', 'Lorenzo'
-  ],
-  attendingStudents = [];
-
-async.eachSeries(students, askAttendance, (error) => {
-  console.log('Attending students are: ');
-
-  attendingStudents.forEach((attendingStudent) => {
-    console.log(attendingStudent);
+  ].map((value) => {
+    return {
+      name: value,
+      attending: undefined
+    };
   });
 
+async.eachSeries(students, askAttendance, (error) => {
   rl.close();
+
+  console.log('Attending students are: ');
+
+  students.filter((student) => {
+    return student.attending;
+  }).forEach((student) => {
+    console.log(student.name);
+  });
 });
 
 function askAttendance(student, callback) {
-  rl.question('Is ' + student + ' attending? ', (answer) => {
-    if (answer === 'yes' || answer === 'y') {
-      attendingStudents.push(student);
-    }
+  rl.question('Is ' + student.name + ' attending? ', (answer) => {
+    student.attending = (answer === 'yes') || (answer === 'y');
 
     callback();
   });
